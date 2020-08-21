@@ -2,105 +2,48 @@
 @section('content')
 <div class="container">
     <div class="timeline">
-        <div class="timeline-cover">
-            <div class="timeline-nav-bar hidden-sm hidden-xs">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="profile-info">
-                            <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" alt="" class="img-responsive profile-photo" />
-                            <h3><strong>{{ $user->name }}</strong></h3> 
-                            <p class="text-muted">{{ trans('profile.status') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-9">
-                        <ul class="list-inline profile-menu">
-                            <li>
-                                <a href="#" class="active">{{ trans('profile.timeline') }}</a>
-                            </li>
-                            <li>
-                                <a href="#">{{ trans('profile.about') }}</a>
-                            </li>
-                            <li>
-                                <a href="#">{{ trans('profile.album') }}</a>
-                            </li>
-                            <li>
-                                <a href="#">{{ trans('profile.friends') }}</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('profile.followers', ['userId' => $user->id]) }}" class="active">{{ trans('profile.followers') }}
-                                    <span class="badge badge-primary">{{ $user->followers()->get()->count() }}</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('profile.following', ['userId' => $user->id]) }}" class="active">{{ trans('profile.following') }}
-                                    <span class="badge badge-primary">{{ $user->following()->get()->count() }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                        <ul class="follow-me list-inline">    
-                            @if (Auth::id() != $user->id)
-                                @if (auth()->user()->isFollowing($user))
-                                    <li>
-                                        <form method="POST" class="form-horizontal" action="{{ route('profile.unfollow', ['userId' => $user->id]) }}">
-                                            @csrf
-                                            <input type="hidden" name="userId" value={{ $user->id }}>
-                                            <button type="submit" class="btn-primary">{{ trans('profile.unfollow') }}</button>
-                                        </form>
-                                    </li>
-                                @else
-                                    <li>
-                                        <form method="POST" class="form-horizontal" action="{{ route('profile.follow', ['userId' => $user->id]) }}">
-                                            @csrf
-                                            <input type="hidden" name="userId" value={{ $user->id }}>
-                                            <button type="submit" class="btn-primary">{{ trans('profile.follow') }}</button>
-                                        </form>
-                                    </li>
-                                @endif
-                            @endif
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="navbar-mobile hidden-lg hidden-md">
-                <div class="profile-info">
-                    <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" alt="" class="img-responsive profile-photo" />
-                    <h3>{{ $user->name }}</h3>  
-                    {{ trans('profile.status') }}
-                </div>
-                <div class="mobile-menu">
-                    <ul class="list-inline">
-                        <li>
-                            <a href="#" class="active">{{ trans('profile.timeline') }}</a>
-                        </li>
-                        <li>
-                            <a href="#">{{ trans('profile.about') }}</a>
-                        </li>
-                        <li>
-                            <a href="#">{{ trans('profile.album') }}</a>
-                        </li>
-                        <li>
-                            <a href="#">{{ trans('profile.friends') }}</a>
-                        </li>
-                    </ul>
-                    <button class="btn-primary">{{ trans('profile.follow') }}</button>
-                </div>
-            </div>
-        </div>
         <div id="page-contents">
             <div class="row">
-                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <div class="profile-card">
+                        <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" alt="user" class="profile-photo" />
+                        <h5><a href="#" class="text-white">{{ Auth::user()->name }}</a></h5>
+                        <a href="{{ route('profile.followers', ['userId' => $user->id]) }}" class="text-white">
+                            <i class="ion ion-android-person-add"></i>
+                            {{ $user->followers()->get()->count() }} {{ trans('profile.followers') }}
+                        </a>
+                    </div>
+                    <ul class="nav-news-feed">
+                        <li>
+                            <i class="icon ion-ios-paper"></i>
+                            <div>
+                                <a href="newsfeed.html">My Newsfeed</a>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="icon ion-ios-people-outline"></i>
+                            <div>
+                                <a href="newsfeed-friends.html">Friends</a>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="icon ion-chatboxes"></i>
+                            <div>
+                                <a href="newsfeed-messages.html">Messages</a>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="icon ion-images"></i>
+                            <div>
+                                <a href="newsfeed-images.html">Images</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 <div class="col-md-7">
                     <div class="create-post">
                         <div class="card">
                             @if (Auth::id() == $user->id)
-                                <div class="card-header">
-                                    <h4>
-                                        <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" alt="" class="profile-photo-md" />
-                                        <span>
-                                            <strong>{{ $user->name }}</strong>
-                                        </span>
-                                    </h4>
-                                </div>
                                 <form action="{{ route('post.store') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
                                     @csrf
                                     <div class="card-body">
@@ -125,21 +68,15 @@
                         </div>
                     </div>
                     <div class="list-group">
-                        @forelse ($posts as $post)
+                        @foreach ($posts as $post)
                             <div class="post-content">
-                                <div class="post-date hidden-xs hidden-sm">
-                                    <h5>
-                                        <strong>{{ $user->name }}</strong>
-                                    </h5>
-                                    <p class="text-grey">{{ $post->created_at->format('d-m-Y') }}</p>
-                                </div>
                                 <div class="post-container">
                                     <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" alt="user" class="profile-photo-md pull-left" />
                                     <div class="post-detail">
                                         <div class="user-info">
                                             <h5>
                                                 <strong>
-                                                    <a href="#" class="profile-link">{{ $user->name }}</a>
+                                                    <a href="#" class="profile-link">{{ $post->user->name }}</a>
                                                 </strong>
                                             </h5>
                                             <p class="text-muted">{{ $post->created_at->format('d-m-Y H:i') }}</p>
@@ -192,9 +129,27 @@
                                     </div>
                                 </div>
                             </div>
-                        @empty
-                            <p>{{ trans('profile.no_post') }}</p>
-                        @endforelse
+                        @endforeach
+                    </div>
+                </div>
+                <div class="col-md-2 static">
+                    <div class="suggestions" id="sticky-sidebar">
+                        <h4 class="grey">Who to Follow</h4>
+                        @foreach ($unfollowUsers as $user)
+                            @if (Auth::id() != $user->id)
+                                <div class="follow-user">
+                                    <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }} " alt="" class="profile-photo-sm pull-left" />
+                                    <div>
+                                        <h5><a href="timeline.html">{{ $user->name }}</a></h5>
+                                        <form method="POST" class="form-horizontal" action="{{ route('profile.follow', ['userId' => $user->id]) }}">
+                                            @csrf
+                                            <input type="hidden" name="userId" value={{ $user->id }}>
+                                            <button type="submit" class="btn-primary">{{ trans('profile.follow') }}</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             </div>

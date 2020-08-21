@@ -32,7 +32,7 @@ class Post extends Model
         return $this->hasMany(Comment::class)->whereNull('parent_id');
     }
 
-    public function medias() 
+    public function media() 
     {
         return $this->hasMany(Media::class);
     }
