@@ -27,7 +27,15 @@ class PostController extends Controller
         $username = Auth::user()->name;
         $post = Post::create($request->all());
 
-        return redirect()->route('profile.index', compact('username'));
+        return back();
+    }
+
+    public function show($post_id)
+    {
+        $post = Post::find($post_id);
+        $comments = $post->comments;
+
+        return view('profile.index', compact('post','comments'));
     }
 
     public function destroy(post $post)

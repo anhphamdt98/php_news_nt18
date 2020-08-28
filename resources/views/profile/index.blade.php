@@ -26,7 +26,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="navbar-mobile hidden-lg hidden-md">
                 <div class="profile-info">
                     <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" alt="" class="img-responsive profile-photo" />
@@ -43,7 +42,6 @@
                     <button class="btn-primary">{{ trans('profile.add-friend') }}</button>
                 </div>
             </div>
-
         </div>
         <div id="page-contents">
             <div class="row">
@@ -105,17 +103,26 @@
                                             <p>{{ $post->caption }}</p>
                                         </div>
                                         <div class="line-divider"></div>
+                                        
+                                        @include('post.commentDisplay', ['comments' => $post->comments, 'post_id' => $post->id])
+
                                         <div class="post-comment">
-                                            <img src="{{ asset('bower_components/bower-package/images/users/user-11.jpg') }}" class="profile-photo-sm" />
-                                            <p><a href="#" class="profile-link">{{ trans('profile.username1') }} </a><i class="em em-laughing"></i>{{ trans('profile.comment1') }}</p>
-                                        </div>
-                                        <div class="post-comment">
-                                            <img src="{{ asset('bower_components/bower-package/images/users/user-4.jpg') }}" class="profile-photo-sm" />
-                                            <p><a href="#" class="profile-link">{{ trans('profile.username2') }} </a>{{ trans('profile.comment2') }}</p>
-                                        </div>
-                                        <div class="post-comment">
-                                            <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" class="profile-photo-sm" />
-                                            <input type="text" class="form-control" placeholder="{{ trans('profile.post-comment') }}">
+                                            <form method="post" action="{{ route('comment.store') }}">
+                                                @method('POST')
+                                                @csrf
+                                                <div class="form-group row">
+                                                    <div class="col-md-1 avatar-user">
+                                                        <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" class="profile-photo-sm" />
+                                                    </div>
+                                                    <div class="col-md-11 layout-comment-input">
+                                                        <a href="#" class="profile-link">{{ $user->name }}</a>
+                                                        <textarea class="form-control" name="comment" cols="45" rows="3" placeholder="{{ trans('profile.post-comment') }}"></textarea>
+                                                        <input type="hidden" name="post_id" value="{{ $post->id }}" />
+                                                        <input type="hidden" name="user_id" value="{{ $user->id }}" />
+                                                        <button type="submit" class="btn btn-primary" value="Comment"><i class="fa fa-comment" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>           
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

@@ -19,3 +19,4 @@ Route::get('logout', 'HomeController@logout')->name('logout');
 Auth::routes();
 Route::get('user/{username}', 'ProfileController@show')->name('profile.index')->middleware('auth');
 Route::post('post', 'PostController@store')->name('post.store')->middleware('auth');
+Route::post('comment', 'CommentController@store')->name('comment.store')->middleware('auth');
