@@ -25,9 +25,9 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('layouts.timeline') }} <span><img src="{{ asset('bower_components/bower-package/images/down-arrow.png') }}" alt="" /></span></a>
                             <ul class="dropdown-menu login">
-                                <li><a href="{{ route('profile.index',['username'=>Auth::user()->name]) }}">{{ trans('layouts.timeline') }}</a></li>
-                                <li><a href="{{ route('profile.index',['username'=>Auth::user()->name]) }}">{{ trans('layouts.timeline-friend') }}</a></li>
-                                <li><a href="{{ route('profile.index',['username'=>Auth::user()->name]) }}">{{ trans('layouts.timeline-me') }}</a></li>
+                                <li><a href="{{ route('profile.index',['userId'=>Auth::user()->id]) }}">{{ trans('layouts.timeline') }}</a></li>
+                                <li><a href="{{ route('profile.index',['userId'=>Auth::user()->id]) }}">{{ trans('layouts.timeline-friend') }}</a></li>
+                                <li><a href="{{ route('profile.index',['userId'=>Auth::user()->id]) }}">{{ trans('layouts.timeline-me') }}</a></li>
                             </ul>
                         </li>
                     @endif
