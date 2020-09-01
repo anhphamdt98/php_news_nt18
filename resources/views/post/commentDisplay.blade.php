@@ -5,7 +5,7 @@
                 <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" class="profile-photo-sm" />
             </div>            
             <div class="col-md-11 layout-avatar">
-                <a href="#" class="profile-link">{{ $user->name }}</a>
+                <a href="#" class="profile-link">{{ $comment->user->name }}</a>
                 <p>{{ $comment->comment }}</p>
             </div>
         </div>
@@ -19,10 +19,10 @@
                         <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" class="profile-photo-sm" />
                     </div>
                     <div class="col-md-11 layout-comment-input">
-                        <a href="#" class="profile-link">{{ $user->name }}</a>
+                        <a href="#" class="profile-link">{{ Auth::user()->name }}</a>
                         <textarea class="form-control" name="comment" cols="25" rows="1" placeholder="{{ trans('profile.post-comment') }}"></textarea>
                         <input type="hidden" name="post_id" value="{{ $post_id }}" />
-                        <input type="hidden" name="user_id" value="{{ $user->id }}" />
+                        <input type="hidden" name="user_id" value="{{ Auth::id() }}" />
                         <input type="hidden" name="parent_id" value="{{ $comment->id }}" />
                         <button type="submit" class="btn btn-warning"><i class="fa fa-comments"></i></button>
                     </div>
