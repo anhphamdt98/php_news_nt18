@@ -19,8 +19,6 @@ return [
     'number' => '2984',
     'like' => '48',
     'dislike' => '1',
-    'username1' => 'Diana',
-    'username2' => 'John',
-    'comment1' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    'comment2' => 'Ut enim ad minim veniam, quis nostrud ',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
 ];

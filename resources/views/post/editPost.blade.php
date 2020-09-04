@@ -8,8 +8,6 @@
                     <div class="col-md-3">
                         <div class="profile-info">
                             <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" alt="" class="img-responsive profile-photo" />
-                            <h3><strong>{{ $user->name }}</strong></h3> 
-                            <p class="text-muted">{{ trans('profile.status') }}</p>
                         </div>
                     </div>
                     <div class="col-md-9">
@@ -90,42 +88,9 @@
             <div class="row">
                 <div class="col-md-3"></div>
                 <div class="col-md-7">
-                    <div class="create-post">
-                        <div class="card">
-                            @if (Auth::id() == $user->id)
-                                <div class="card-header">
-                                    <h4>
-                                        <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" alt="" class="profile-photo-md" />
-                                        <span>
-                                            <strong>{{ $user->name }}</strong>
-                                        </span>
-                                    </h4>
-                                </div>
-                                <form action="{{ route('post.store') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="card-body">
-                                        <div class="form-group">
-                                            <textarea name="caption" id="caption" cols="70" rows="6" class="form-control" placeholder="{{ trans('profile.write-post') }} "></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="tools">
-                                            <ul class="publishing-tools list-inline">
-                                                <li><i class="fa fa-camera"></i></li>
-                                                <li><input type="file" class="form-control" name="url[]" multiple></li>
-                                                <button type="submit" class="btn btn-primary pull-right">
-                                                    {{ trans('profile.publish') }}
-                                                </button>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="_token" value="{{ Session::token() }}">
-                                </form>
-                            @endif
-                        </div>
-                    </div>
+                    
                     <div class="list-group">
-                        @forelse ($posts as $post)
+                        
                             <div class="post-content">
                                 <div class="post-date hidden-xs hidden-sm">
                                     <h5>
@@ -151,60 +116,60 @@
                                             <a class="btn text-red">
                                                 <i class="fa fa-thumbs-down"></i> {{ trans('profile.dislike') }}
                                             </a>
-                                            @if(Auth::id() == $post->user_id)
-                                                <a class="btn text-blue" href="{{ route('post.edit', ['postId' => $post->id]) }}">
-                                                    {{ trans('profile.edit') }}
-                                                </a>
-                                                <a class="btn text-red" href="{{ route('post.delete', ['postId' => $post->id]) }}">
-                                                    {{ trans('profile.delete') }}
-                                                </a>
+                                        </div>
+                                        <div class="line-divider"></div>
+
+                                        <form action="{{ route('post.update', ['postId' => $post->id]) }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                                            @method('PUT')
+                                            @csrf
+                                            <div class="post-media media-layouts">
+                                                @foreach ($post->media as $media)
+                                                    <tr>
+                                                        <td>
+                                                            @foreach (json_decode($media->url) as $picture)
+                                                                <img class="media-styles" src="{{ asset(config('media.image') . $picture) }}"/>
+                                                            @endforeach
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                                <div class="tools">
+                                                    <ul class="publishing-tools list-inline">
+                                                        <li><i class="fa fa-camera"></i></li>
+                                                        <li><input type="file" class="form-control" name="url[]" multiple></li>
+                                                        <button type="submit" class="btn btn-primary pull-right">
+                                                            {{ trans('profile.publish') }}
+                                                        </button>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="post-text caption">
+                                                <textarea name="caption" type="text"  cols="70" rows="6" class="form-control" >{{ $post->caption }}</textarea>
+                                            </div>
+                                            <input type="hidden" name="_token" value="{{ Session::token() }}">
+                                        </form>
+
+                                        @foreach ($post->comments as $comment)
+                                            @if ($comment->parent_id == null)
+                                                <div class="line-divider"></div>
                                             @endif
-                                        </div>
-                                        <div class="line-divider"></div>
-                                        <div class="post-media media-layouts">
-                                            @foreach ($post->media as $media)
-                                                <tr>
-                                                    <td>
-                                                        @foreach (json_decode($media->url) as $picture)
-                                                            <img class="media-styles" src="{{ asset(config('media.image') . $picture) }}"/>
-                                                        @endforeach
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </div>
-                                        <div class="line-divider"></div>
-                                        <div class="post-text caption">
-                                            <p><strong>{{ $post->caption }}</strong></p>
-                                        </div>
-                                        
-                                        @include('post.commentDisplay', ['comments' => $post->comments, 'post_id' => $post->id])
-                                        
-                                        <div class="line-divider"></div>
-                                        <div class="post-comment">
-                                            <form method="post" action="{{ route('comment.store') }}">
-                                                @method('POST')
-                                                @csrf
-                                                <div class="form-group row">
+                                            <div class="display-comment @if ($comment->parent_id != null) layout-comment @endif">
+                                                <div class="post-comment row">
                                                     <div class="col-md-1 avatar-user">
-                                                        <img src="{{ asset('bower_components/bower-package/images/users/user-1.jpg') }}" class="profile-photo-sm" />
+                                                        <img src="{{ asset(config('media.image') . $comment->user->avatar) }}" class="profile-photo-sm" />
+                                                    </div>            
+                                                    <div class="col-md-11 layout-avatar">
+                                                        <a href="#" class="profile-link">{{ $comment->user->name }}</a>
+                                                        <p>{{ $comment->comment }}</p>
                                                     </div>
-                                                    <div class="col-md-11 layout-comment-input">
-                                                        <a href="#" class="profile-link">{{ Auth::user()->name }}</a>
-                                                        <input class="form-control comment-input-style" name="comment" placeholder="{{ trans('profile.post-comment') }}" autocomplete="off">
-                                                        <input type="hidden" name="post_id" value="{{ $post->id }}" />
-                                                        <input type="hidden" name="user_id" value="{{ Auth::id() }}" />
-                                                        <button type="submit" class="btn btn-primary" value="Comment"><i class="fa fa-comment" aria-hidden="true"></i></button>
-                                                    </div>
-                                                </div>           
-                                            </form>
-                                        </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                        
                                     </div>
                                 </div>
                             </div>
-                        @empty
-                            <p>{{ trans('profile.no_post') }}</p>
-                        @endforelse
                     </div>
+
                 </div>
             </div>
         </div>
