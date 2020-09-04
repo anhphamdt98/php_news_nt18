@@ -27,5 +27,20 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('{userId}/following', 'ProfileController@following')->name('profile.following');
 });
 
+// Posts
 Route::post('post', 'PostController@store')->name('post.store')->middleware('auth');
+Route::get('like/{post}', 'PostController@like')->name('post.like');
+Route::get('unlike/{post}', 'PostController@unlike')->name('post.unlike');
+
+// Comments
 Route::post('comment', 'CommentController@store')->name('comment.store')->middleware('auth');
+
+
+//Admin
+Route::group(['prefix' => 'admin'], function() {
+    // Route::get('/', 'AdminController@index')->name('admin.index');
+    Route::resource('action_users', 'UserController');
+    Route::get('users', 'AdminController@getUsers')->name('admin.users');
+    Route::get('posts', 'AdminController@getPosts')->name('admin.posts');
+    Route::get('comments', 'AdminController@getComments')->name('admin.comments');
+});

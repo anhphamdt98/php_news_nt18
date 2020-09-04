@@ -14,7 +14,7 @@
         </div>
         <a href="" id="reply"></a>
         @if (is_null($comment->parent_id) )
-            @include('post.commentDisplay', ['comments' => $comment->replies])
+            @include ('post.commentDisplay', ['comments' => $comment->replies])
             <form method="POST" action="{{ route('comment.store') }}">
                 @csrf
                 <div class="form-group layout-comment row" >
